@@ -1,7 +1,23 @@
-FROM java:8
-LABEL maintainer=“01114831@pw.edu.pl”
-VOLUME /tmp
-EXPOSE 8080
-ADD ./target/populator-0.0.1-SNAPSHOT.jar populator-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java","-jar","populator-0.0.1-SNAPSHOT.jar"]
+FROM ubuntu:16.04
 
+MAINTAINER zespol1
+
+RUN apt-get update -y
+RUN apt-get install -y ffmpeg
+RUN apt-get install -y python3-pip python3-dev
+
+COPY ./requirements.txt /app/requirements.txt
+
+WORKDIR /app
+
+RUN pip3 install -r requirements.txt
+
+COPY . /app
+
+EXPOSE 5000
+
+ENV LANG C.UTF-8
+ENV REDIS_HOST redis-docker-container
+ENV REDIS_PORT 6379
+
+ENTRYPOINT ["gunicorn", "-w", "1", "--bind", "0.0.0.0:5000", "wsgi:app", "--timeout", "36000" ] 
