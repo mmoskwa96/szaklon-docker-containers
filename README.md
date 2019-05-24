@@ -28,22 +28,22 @@ Po poprawnym utworzeniu pliku jar konieczne jest stworzenie pliku _Dockerfile_ (
 
 Należy przejść do folderu /extractor i umieścić w nim plik _Dockerfile_ (zawartość przekopiować z pliku _Dockerfile_extractor_ z tego repozytorium). Do zbudowania obrazu kontenera ekstraktora należy wywołać poniższą komendę:
 
-`sudo docker build -f Dockerfile -t extractor-docker-image .`
+`docker build -f Dockerfile -t extractor-docker-image .`
 
 ### Uruchamianie kontenerów
 
 Uruchomienie kontenera **redisa**:
 
-`sudo docker run -d --name redis-docker-container -p 6379:6379 --network testnetwork redis`
+`docker run -d --name redis-docker-container -p 6379:6379 --network testnetwork redis`
 
 Uruchomienie kontenera **mysql**:
 
-`sudo docker run -d -p 2012:3306 --name mysql-docker-container -e MYSQL_ROOT_PASSWORD=root12345 -e MYSQL_DATABASE=populator --network testnetwork mysql:latest`
+`docker run -d -p 2012:3306 --name mysql-docker-container -e MYSQL_ROOT_PASSWORD=root12345 -e MYSQL_DATABASE=populator --network testnetwork mysql:latest`
 
 Uruchomienie kontenera **extractora**:
 
-`sudo docker run -p 5000:5000 --name extractor-docker-container --network testnetwork extractor-docker-image`
+`docker run -p 5000:5000 --name extractor-docker-container --network testnetwork extractor-docker-image`
 
 Uruchomienie kontenera **populatora**:
 
-`sudo docker run -p 8080:8080 --name populator-docker-container --network testnetwork populator-docker-image`
+`docker run -p 8080:8080 --name populator-docker-container --network testnetwork populator-docker-image`
