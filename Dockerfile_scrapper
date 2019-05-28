@@ -1,5 +1,7 @@
-FROM microsoft/dotnet:2.1-runtime AS base
+FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
 WORKDIR /app
+EXPOSE 7963
+ENV ASPNETCORE_URLS http://+:7963
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
@@ -7,13 +9,15 @@ COPY ["Scrapper/Scrapper.csproj", "Scrapper/"]
 RUN dotnet restore "Scrapper/Scrapper.csproj"
 COPY . .
 WORKDIR "/src/Scrapper"
+ENV ASPNETCORE_URLS http://+:7963
 RUN dotnet build "Scrapper.csproj" -c Release -o /app
 
 FROM build AS publish
+ENV ASPNETCORE_URLS http://+:7963
 RUN dotnet publish "Scrapper.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Scrapper.dll"]
-
+ENV ASPNETCORE_URLS http://+:7963
+ENTRYPOINT ["dotnet", "Scrapper.dll", "--server.urls", "http://+:7963"]
